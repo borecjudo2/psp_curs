@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public interface UserService {
 
+    boolean isAuthentication(String login, String password);
+
     UserDto save(UserDto userDto);
 
     UserDto getById(UUID id);
@@ -16,4 +18,6 @@ public interface UserService {
     List<UserDto> getAll();
 
     void delete(UUID id);
+
+    void deleteAll(List<UserDto> list);
 }
