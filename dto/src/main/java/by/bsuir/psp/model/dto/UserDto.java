@@ -14,6 +14,8 @@ public class UserDto implements Serializable {
 
   private UUID id;
 
+  private UserRole role;
+
   private String login;
 
   private String name;
@@ -27,8 +29,9 @@ public class UserDto implements Serializable {
   public UserDto() {
   }
 
-  public UserDto(UUID id, String login, String name, String password, DepartmentDto department, List<AwardDto> awards) {
+  public UserDto(UUID id, UserRole role, String login, String name, String password, DepartmentDto department, List<AwardDto> awards) {
     this.id = id;
+    this.role = role;
     this.login = login;
     this.name = name;
     this.password = password;
@@ -42,6 +45,14 @@ public class UserDto implements Serializable {
 
   public void setId(UUID id) {
     this.id = id;
+  }
+
+  public UserRole getRole() {
+    return role;
+  }
+
+  public void setRole(UserRole role) {
+    this.role = role;
   }
 
   public String getLogin() {
@@ -72,15 +83,15 @@ public class UserDto implements Serializable {
     return department;
   }
 
-  public void setDepartment(DepartmentDto departmentDto) {
-    this.department = departmentDto;
+  public void setDepartment(DepartmentDto department) {
+    this.department = department;
   }
 
   public List<AwardDto> getAwards() {
     return awards;
   }
 
-  public void setAwards(List<AwardDto> awardDtos) {
-    this.awards = awardDtos;
+  public void setAwards(List<AwardDto> awards) {
+    this.awards = awards;
   }
 }

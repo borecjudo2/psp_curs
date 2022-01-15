@@ -2,3 +2,4 @@ by\bsuir\psp\model\dto\AwardDto.class
 by\bsuir\psp\model\dto\DepartmentDto.class
 by\bsuir\psp\model\dto\service\UserService.class
 by\bsuir\psp\model\dto\UserDto.class
+by\bsuir\psp\model\dto\UserRole.class

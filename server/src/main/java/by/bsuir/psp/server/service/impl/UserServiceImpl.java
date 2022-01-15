@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean isAuthentication(String login, String password) {
-    return true;
+   return repository.findByLoginAndPassword(login, password).isPresent();
   }
 
   @Override
@@ -36,8 +36,7 @@ public class UserServiceImpl implements UserService {
    try {
      User dtoToUser = mapper.dtoToUser(userDto);
      User user = repository.save(dtoToUser);
-     UserDto dto = mapper.userToDto(user);
-     return dto;
+     return mapper.userToDto(user);
    }catch (Exception e) {
      e.printStackTrace();
      return null;
