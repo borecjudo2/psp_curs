@@ -15,11 +15,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.DatePicker?>
-<BorderPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@../styles/Styles.css"
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.Pane ?>
+<BorderPane prefHeight="1000.0" prefWidth="1500.0" stylesheets="@../styles/Styles.css"
             xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="by.bsuir.psp.client.controller.UserController">
     <left>
-        <VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0" styleClass="background"
+        <VBox disable="${controller.currentUserBasic}" prefHeight="571.0" prefWidth="506.0" spacing="10.0"
+              styleClass="background"
               stylesheets="@../styles/Styles.css" BorderPane.alignment="CENTER">
             <children>
                 <Label text="Добавить нового пользователя" textFill="WHITE">
@@ -45,6 +48,15 @@
                     </children>
                     <VBox.margin>
                         <Insets left="25.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="255.0" spacing="15.0">
+                    <children>
+                        <RadioButton fx:id="rbAdmin" mnemonicParsing="false" selected="true" text="Админ"
+                                     textFill="WHITE"/>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </HBox>
                 <TextField fx:id="txName" prefHeight="30.0" prefWidth="246.0" promptText="Имя">
@@ -76,7 +88,7 @@
                             </effect>
                         </Button>
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-                                onAction="#saveUser" prefHeight="30.0" prefWidth="75.0" styleClass="btnGreen"
+                                onAction="#saveUser" prefHeight="30.0" styleClass="btnGreen"
                                 text="Сохранить" textFill="WHITE">
                             <font>
                                 <Font size="15.0"/>
@@ -90,7 +102,7 @@
                         <Insets/>
                     </opaqueInsets>
                     <VBox.margin>
-                        <Insets left="110.0"/>
+                        <Insets left="25.0"/>
                     </VBox.margin>
                 </HBox>
 
@@ -102,12 +114,12 @@
                         <Insets bottom="10.0" left="20.0" top="30.0"/>
                     </VBox.margin>
                 </Label>
-                <DatePicker fx:id="txAwardDate" editable="false" prefHeight="30.0" prefWidth="245.0" promptText="Date of Birth">
+                <DatePicker fx:id="txPaymentDate" editable="false" prefHeight="30.0" promptText="Дата получения ЗП">
                     <VBox.margin>
-                        <Insets left="25.0" />
+                        <Insets left="25.0"/>
                     </VBox.margin>
                 </DatePicker>
-                <TextField fx:id="txAward" prefHeight="30.0" prefWidth="246.0" promptText="Сумма">
+                <TextField fx:id="txSalary" prefHeight="30.0" prefWidth="246.0" promptText="Заработная плата">
                     <VBox.margin>
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
@@ -121,8 +133,8 @@
                             </effect>
                         </Button>
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-                                onAction="#saveAward" prefHeight="30.0" prefWidth="75.0" styleClass="btnGreen"
-                                text="Сохранить" textFill="WHITE">
+                                onAction="#saveAward" prefHeight="30.0" styleClass="btnGreen"
+                                text="Сохранить и посчитать премию" textFill="WHITE">
                             <font>
                                 <Font size="15.0"/>
                             </font>
@@ -135,7 +147,7 @@
                         <Insets/>
                     </opaqueInsets>
                     <VBox.margin>
-                        <Insets left="110.0"/>
+                        <Insets left="25.0"/>
                     </VBox.margin>
                 </HBox>
             </children>
@@ -152,7 +164,21 @@
             <children>
                 <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
                     <children>
-                        <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefHeight="22.0"
+                        <Button mnemonicParsing="false" onAction="#toExcel" prefHeight="22.0"
+                                prefWidth="70.0" styleClass="background" style="-fx-background-color: green" text=".xsl"
+                                textFill="#fff9f9"
+                                textOverrun="CLIP">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                            <HBox.margin>
+                                <Insets right="5.0" top="5.0"/>
+                            </HBox.margin>
+                            <effect>
+                                <DropShadow blurType="ONE_PASS_BOX" color="#00000091"/>
+                            </effect>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#logout" prefHeight="22.0"
                                 prefWidth="70.0" styleClass="background" text="Выйти" textFill="#fff9f9"
                                 textOverrun="CLIP">
                             <font>
@@ -167,7 +193,7 @@
                         </Button>
                     </children>
                 </HBox>
-                <TableView onMouseClicked="#clickedOnUserTable" fx:id="userTable" prefHeight="300.0" prefWidth="679.0"
+                <TableView onMouseClicked="#clickedOnUserTable" fx:id="userTable" prefHeight="200.0"
                            tableMenuButtonVisible="true">
                     <columns>
                         <TableColumn fx:id="columnUserId" maxWidth="700.0" prefWidth="20.0" text="ИД"/>
@@ -184,16 +210,17 @@
                     <contextMenu>
                         <ContextMenu>
                             <items>
-                                <MenuItem mnemonicParsing="false"
+                                <MenuItem disable="${controller.currentUserBasic}" mnemonicParsing="false"
                                           onAction="#deleteUser" text="Удалить"/>
                             </items>
                         </ContextMenu>
                     </contextMenu>
                 </TableView>
-                <TableView fx:id="awardTable" prefHeight="200.0" prefWidth="730.0" tableMenuButtonVisible="true">
+                <TableView fx:id="paymentTable" prefHeight="200.0" tableMenuButtonVisible="true">
                     <columns>
-                        <TableColumn fx:id="awardColumnDate" maxWidth="4000.0" prefWidth="75.0" text="Дата выплаты"/>
-                        <TableColumn fx:id="awardColumnAmount" maxWidth="4000.0" prefWidth="75.0" text="Сумма"/>
+                        <TableColumn fx:id="paymentColumnDate" maxWidth="4000.0" prefWidth="75.0" text="Дата выплаты"/>
+                        <TableColumn fx:id="paymentColumnSalary" maxWidth="4000.0" prefWidth="75.0" text="Зарплата"/>
+                        <TableColumn fx:id="paymentColumnAward" maxWidth="4000.0" prefWidth="75.0" text="Премия"/>
                     </columns>
                     <VBox.margin>
                         <Insets left="10.0" right="5.0"/>
@@ -204,12 +231,13 @@
                     <contextMenu>
                         <ContextMenu>
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#deleteAward" text="Удалить"/>
+                                <MenuItem disable="${controller.currentUserBasic}" mnemonicParsing="false"
+                                          onAction="#deleteAward" text="Удалить"/>
                             </items>
                         </ContextMenu>
                     </contextMenu>
                 </TableView>
-
+                <Pane fx:id="pane"/>
             </children>
         </VBox>
     </center>

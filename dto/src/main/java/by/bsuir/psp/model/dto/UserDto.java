@@ -24,19 +24,19 @@ public class UserDto implements Serializable {
 
   private DepartmentDto department;
 
-  private List<AwardDto> awards;
+  private List<PaymentDto> payments;
 
   public UserDto() {
   }
 
-  public UserDto(UUID id, UserRole role, String login, String name, String password, DepartmentDto department, List<AwardDto> awards) {
+  public UserDto(UUID id, UserRole role, String login, String name, String password, DepartmentDto department, List<PaymentDto> payments) {
     this.id = id;
     this.role = role;
     this.login = login;
     this.name = name;
     this.password = password;
     this.department = department;
-    this.awards = awards;
+    this.payments = payments;
   }
 
   public UUID getId() {
@@ -87,11 +87,11 @@ public class UserDto implements Serializable {
     this.department = department;
   }
 
-  public List<AwardDto> getAwards() {
-    return awards;
+  public List<PaymentDto> getPayments() {
+    return payments;
   }
 
-  public void setAwards(List<AwardDto> awards) {
-    this.awards = awards;
+  public void setPayments(List<PaymentDto> payments) {
+    this.payments = payments;
   }
 }

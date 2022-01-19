@@ -57,5 +57,5 @@ public class User implements Serializable {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn
-  private List<Award> awards = new ArrayList<>();
+  private List<Payment> payments = new ArrayList<>();
 }

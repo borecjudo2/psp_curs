@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    boolean isAuthentication(String login, String password);
+    UserDto authentication(String login, String password);
 
     UserDto save(UserDto userDto);
 
@@ -20,4 +20,6 @@ public interface UserService {
     void delete(UUID id);
 
     void deleteAll(List<UserDto> list);
+
+    void toExcel(UserDto userDto);
 }

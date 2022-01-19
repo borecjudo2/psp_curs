@@ -1,7 +1,7 @@
 package by.bsuir.psp.server;
 
 import by.bsuir.psp.model.dto.UserRole;
-import by.bsuir.psp.server.model.Award;
+import by.bsuir.psp.server.model.Payment;
 import by.bsuir.psp.server.model.Department;
 import by.bsuir.psp.server.model.User;
 import by.bsuir.psp.server.repo.UserRepository;
@@ -24,7 +24,7 @@ public class Application {
 				.login("adm")
 				.password("adm")
 				.department(new Department(null, "MAIN"))
-				.awards(Collections.singletonList(new Award(null, new Date(), 1000L)))
+				.payments(Collections.singletonList(new Payment(null, new Date(), 1000L, 300L)))
 				.build());
 	}
 }

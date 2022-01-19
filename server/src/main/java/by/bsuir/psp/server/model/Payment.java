@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Award implements Serializable {
+public class Payment implements Serializable {
 
   @Id
   @GeneratedValue
@@ -33,5 +33,7 @@ public class Award implements Serializable {
 
   private Date receiveDate;
 
-  private Long amount;
+  private Long salary;
+
+  private Long award;
 }

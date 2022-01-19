@@ -2,49 +2,63 @@ package by.bsuir.psp.client.controller;
 
 import by.bsuir.psp.client.config.StageManager;
 import by.bsuir.psp.client.view.FxmlView;
-import by.bsuir.psp.model.dto.AwardDto;
 import by.bsuir.psp.model.dto.DepartmentDto;
+import by.bsuir.psp.model.dto.PaymentDto;
 import by.bsuir.psp.model.dto.UserDto;
+import by.bsuir.psp.model.dto.UserRole;
 import by.bsuir.psp.model.dto.service.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-/**
- * @author Ram Alapure
- * @since 05-04-2017
- */
-
+@Setter
 @Getter
 @Slf4j
 @Controller
 public class UserController implements Initializable {
+
+  private static final double AWARD_PERCENT = 0.1;
+
+  @FXML
+  private boolean currentUserBasic;
+
+  @FXML
+  private RadioButton rbAdmin;
 
   @FXML
   private Label userId;
@@ -62,11 +76,10 @@ public class UserController implements Initializable {
   private PasswordField txPassword;
 
   @FXML
-  private DatePicker txAwardDate;
+  private DatePicker txPaymentDate;
 
   @FXML
-  private TextField txAward;
-
+  private TextField txSalary;
 
   @FXML
   private TableColumn<UserDto, String> columnLogin;
@@ -84,20 +97,19 @@ public class UserController implements Initializable {
   private TableColumn<UserDto, String> columnDepartmentName;
 
   @FXML
-  private boolean renderAwardTable = false;
-
-  public boolean isRenderAwardTable() {
-    return renderAwardTable;
-  }
+  private TableView<PaymentDto> paymentTable;
 
   @FXML
-  private TableView<AwardDto> awardTable;
+  private TableColumn<UserDto, Date> paymentColumnDate;
 
   @FXML
-  private TableColumn<UserDto, Date> awardColumnDate;
+  private TableColumn<UserDto, String> paymentColumnSalary;
 
   @FXML
-  private TableColumn<UserDto, String> awardColumnAmount;
+  private TableColumn<UserDto, String> paymentColumnAward;
+
+  @FXML
+  private Pane pane;
 
   @Lazy
   @Autowired
@@ -108,10 +120,11 @@ public class UserController implements Initializable {
 
   private final ObservableList<UserDto> userList = FXCollections.observableArrayList();
 
-  private final ObservableList<AwardDto> awardDtoObservableList = FXCollections.observableArrayList();
+  private final ObservableList<PaymentDto> paymentDtoObservableList = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    clearFields();
     userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     setUserColumnProperties();
@@ -128,8 +141,9 @@ public class UserController implements Initializable {
   }
 
   private void setAwardColumnProperties() {
-    awardColumnDate.setCellValueFactory(new PropertyValueFactory<>("receiveDate"));
-    awardColumnAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+    paymentColumnDate.setCellValueFactory(new PropertyValueFactory<>("receiveDate"));
+    paymentColumnSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+    paymentColumnAward.setCellValueFactory(new PropertyValueFactory<>("award"));
   }
 
   private void loadUserDetails() {
@@ -139,11 +153,11 @@ public class UserController implements Initializable {
     updateAwardTable(Collections.emptyList());
   }
 
-  private void updateAwardTable(List<AwardDto> awardDtoList) {
-    awardDtoObservableList.clear();
-    awardDtoObservableList.addAll(awardDtoList);
-    awardTable.setItems(awardDtoObservableList);
-    log.info(String.valueOf(awardDtoList));
+  private void updateAwardTable(List<PaymentDto> paymentDtos) {
+    paymentDtoObservableList.clear();
+    paymentDtoObservableList.addAll(paymentDtos);
+    paymentTable.setItems(paymentDtoObservableList);
+    log.info(String.valueOf(paymentDtos));
   }
 
   @FXML
@@ -159,23 +173,24 @@ public class UserController implements Initializable {
 
   @FXML
   void resetAwardFields() {
-    txAward.setText("");
-    txAwardDate.getEditor().setText(null);
+    txSalary.setText("");
+    txPaymentDate.getEditor().setText(null);
   }
 
   @FXML
   public void clickedOnUserTable() {
     UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
     if (!Objects.isNull(selectedItem)) {
+      boolean isAdmin = getUserRole(selectedItem).equals(UserRole.ADMIN);
+      rbAdmin.setSelected(isAdmin);
       userId.setText(String.valueOf(selectedItem.getId()));
       txName.setText(selectedItem.getName());
       txDepartmentName.setText(selectedItem.getDepartment().getName());
       txLogin.setText(selectedItem.getLogin());
       txPassword.setText(selectedItem.getPassword());
 
-      renderAwardTable = true;
-      log.info(String.valueOf(renderAwardTable));
-      updateAwardTable(selectedItem.getAwards());
+      updateAwardTable(selectedItem.getPayments());
+      updateDiagram(selectedItem.getPayments());
     }
   }
 
@@ -184,6 +199,7 @@ public class UserController implements Initializable {
     if(userId.getText() == null || Objects.equals(userId.getText(), "")) {
       UserDto user = new UserDto();
       log.info("USER CREATED LOCAL");
+      user.setRole(getUserRole(null));
       user.setName(txName.getText());
       user.setDepartment(new DepartmentDto(null, txDepartmentName.getText()));
       user.setLogin(txLogin.getText());
@@ -195,6 +211,7 @@ public class UserController implements Initializable {
     } else {
       UserDto user = userService.getById(UUID.fromString(userId.getText()));
 
+      user.setRole(getUserRole(null));
       user.setName(txName.getText());
       user.setDepartment(new DepartmentDto(null, txDepartmentName.getText()));
       user.setLogin(txLogin.getText());
@@ -204,6 +221,7 @@ public class UserController implements Initializable {
       updateAlert(updatedUser);
     }
 
+    cleanDiagram();
     clearFields();
     loadUserDetails();
   }
@@ -226,22 +244,29 @@ public class UserController implements Initializable {
   public void saveAward() {
     UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
     if(!Objects.isNull(selectedItem)) {
-      Date date = Date.from(txAwardDate.getValue().atStartOfDay()
+      Date date = Date.from(txPaymentDate.getValue().atStartOfDay()
           .atZone(ZoneId.systemDefault())
           .toInstant());
-      AwardDto awardDto = new AwardDto(null, date, Long.parseLong(txAward.getText()));
-      selectedItem.getAwards().add(awardDto);
+      long salary = Long.parseLong(txSalary.getText());
+      PaymentDto paymentDto = new PaymentDto(date, salary, getAwardBySalary(salary));
+      selectedItem.getPayments().add(paymentDto);
       userService.save(selectedItem);
     }
+    cleanDiagram();
     resetAwardFields();
     loadUserDetails();
   }
 
+  private Long getAwardBySalary(long salary) {
+    Double award = salary * AWARD_PERCENT;
+    return award.longValue();
+  }
+
   @FXML
   public void deleteAward() {
-    AwardDto award = awardTable.getSelectionModel().getSelectedItem();
+    PaymentDto paymentDto = paymentTable.getSelectionModel().getSelectedItem();
     UserDto user = userTable.getSelectionModel().getSelectedItem();
-    user.getAwards().remove(award);
+    user.getPayments().remove(paymentDto);
 
     userService.save(user);
 
@@ -250,7 +275,7 @@ public class UserController implements Initializable {
   }
 
   private void clearFields() {
-    renderAwardTable = false;
+    rbAdmin.setSelected(false);
     userId.setText(null);
     txName.clear();
     txDepartmentName.clear();
@@ -275,5 +300,56 @@ public class UserController implements Initializable {
     alert.showAndWait();
   }
 
+  private void showExcelAlert() {
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle("Excel");
+    alert.setHeaderText(null);
+    alert.setContentText("temp.xlsx has created!");
+    alert.showAndWait();
+  }
 
+  private UserRole getUserRole(UserDto userDto) {
+    if(Objects.isNull(userDto)) {
+      return rbAdmin.isSelected() ? UserRole.ADMIN : UserRole.BASIC;
+    } else {
+      return userDto.getRole();
+    }
+  }
+
+  public void toExcel() {
+    UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
+    if (Objects.isNull(selectedItem)) {
+      throw new RuntimeException();
+    }
+    userService.toExcel(selectedItem);
+    showExcelAlert();
+  }
+
+  private void updateDiagram(List<PaymentDto> paymentDtos) {
+    cleanDiagram();
+    CategoryAxis categoryAxis = new CategoryAxis();
+    categoryAxis.setLabel("Месяц");
+
+    NumberAxis numberAxis = new NumberAxis();
+    numberAxis.setLabel("Сумма");
+
+    BarChart chart = new BarChart(categoryAxis, numberAxis);
+    chart.setTitle("Месячная премия");
+
+    XYChart.Series series = new XYChart.Series();
+    series.setName("Премия");
+    paymentDtos.forEach( paymentDto ->
+        series.getData().add(new XYChart.Data<>(getMonth(paymentDto.getReceiveDate()), paymentDto.getAward())));
+
+    chart.getData().add(series);
+    pane.getChildren().add(chart);
+  }
+
+  private String getMonth(Date date) {
+    return new SimpleDateFormat("MMMM", new Locale("ru")).format(date);
+  }
+
+  private void cleanDiagram() {
+    pane.getChildren().clear();
+  }
 }
