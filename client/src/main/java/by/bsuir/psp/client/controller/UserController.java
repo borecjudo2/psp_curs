@@ -3,6 +3,7 @@ package by.bsuir.psp.client.controller;
 import by.bsuir.psp.client.config.StageManager;
 import by.bsuir.psp.client.view.FxmlView;
 import by.bsuir.psp.model.dto.DepartmentDto;
+import by.bsuir.psp.model.dto.OverratedTimeDto;
 import by.bsuir.psp.model.dto.PaymentDto;
 import by.bsuir.psp.model.dto.UserDto;
 import by.bsuir.psp.model.dto.UserRole;
@@ -82,6 +83,9 @@ public class UserController implements Initializable {
   private TextField txSalary;
 
   @FXML
+  private TextField txOverratedTime;
+
+  @FXML
   private TableColumn<UserDto, String> columnLogin;
 
   @FXML
@@ -107,6 +111,9 @@ public class UserController implements Initializable {
 
   @FXML
   private TableColumn<UserDto, String> paymentColumnAward;
+
+  @FXML
+  private TableColumn<UserDto, Integer> paymentColumnOverratedTime;
 
   @FXML
   private Pane pane;
@@ -144,6 +151,7 @@ public class UserController implements Initializable {
     paymentColumnDate.setCellValueFactory(new PropertyValueFactory<>("receiveDate"));
     paymentColumnSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
     paymentColumnAward.setCellValueFactory(new PropertyValueFactory<>("award"));
+    paymentColumnOverratedTime.setCellValueFactory(new PropertyValueFactory<>("overratedTime"));
   }
 
   private void loadUserDetails() {
@@ -175,10 +183,11 @@ public class UserController implements Initializable {
   void resetAwardFields() {
     txSalary.setText("");
     txPaymentDate.getEditor().setText(null);
+    txOverratedTime.setText("");
   }
 
   @FXML
-  public void clickedOnUserTable() {
+  public void clickOnUserTable() {
     UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
     if (!Objects.isNull(selectedItem)) {
       boolean isAdmin = getUserRole(selectedItem).equals(UserRole.ADMIN);
@@ -248,7 +257,10 @@ public class UserController implements Initializable {
           .atZone(ZoneId.systemDefault())
           .toInstant());
       long salary = Long.parseLong(txSalary.getText());
-      PaymentDto paymentDto = new PaymentDto(date, salary, getAwardBySalary(salary));
+      int overratedTime = Integer.parseInt(txOverratedTime.getText());
+      System.out.println(overratedTime);
+      PaymentDto paymentDto = new PaymentDto(null, date, salary, getAwardBySalary(salary, overratedTime),
+          new OverratedTimeDto(null, overratedTime));
       selectedItem.getPayments().add(paymentDto);
       userService.save(selectedItem);
     }
@@ -257,8 +269,11 @@ public class UserController implements Initializable {
     loadUserDetails();
   }
 
-  private Long getAwardBySalary(long salary) {
+  private Long getAwardBySalary(long salary, int overratedTime) {
     Double award = salary * AWARD_PERCENT;
+    if (overratedTime > 0) {
+      award += overratedTime * salary * 0.01;
+    }
     return award.longValue();
   }
 

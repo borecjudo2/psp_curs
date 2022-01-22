@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 public class PaymentDto implements Serializable {
 
+//  private static final long serialVersionUID = -4852520871181574459L;
+
   private UUID id;
 
   private Date receiveDate;
@@ -20,20 +22,17 @@ public class PaymentDto implements Serializable {
 
   private Long award;
 
+  private OverratedTimeDto overratedTime;
+
   public PaymentDto() {
   }
 
-  public PaymentDto(UUID id, Date receiveDate, Long salary, Long award) {
+  public PaymentDto(UUID id, Date receiveDate, Long salary, Long award, OverratedTimeDto overratedTime) {
     this.id = id;
     this.receiveDate = receiveDate;
     this.salary = salary;
     this.award = award;
-  }
-
-  public PaymentDto(Date receiveDate, Long salary, Long award) {
-    this.receiveDate = receiveDate;
-    this.salary = salary;
-    this.award = award;
+    this.overratedTime = overratedTime;
   }
 
   public UUID getId() {
@@ -66,5 +65,24 @@ public class PaymentDto implements Serializable {
 
   public void setAward(Long award) {
     this.award = award;
+  }
+
+  public OverratedTimeDto getOverratedTime() {
+    return overratedTime;
+  }
+
+  public void setOverratedTime(OverratedTimeDto overratedTime) {
+    this.overratedTime = overratedTime;
+  }
+
+  @Override
+  public String toString() {
+    return "PaymentDto{" +
+        "id=" + id +
+        ", receiveDate=" + receiveDate +
+        ", salary=" + salary +
+        ", award=" + award +
+        ", overratedTime=" + overratedTime +
+        '}';
   }
 }
