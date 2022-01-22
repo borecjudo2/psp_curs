@@ -8,9 +8,11 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -36,4 +38,7 @@ public class Payment implements Serializable {
   private Long salary;
 
   private Long award;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private OverratedTime overratedTime;
 }
