@@ -106,7 +106,6 @@ public class UserController implements Initializable {
   @FXML
   private TableColumn<UserDto, String> columnMiddleStar;
 
-
   @FXML
   private TableView<ReviewDto> reviewTable;
 
@@ -119,7 +118,6 @@ public class UserController implements Initializable {
   @FXML
   private TableColumn<UserDto, String> reviewColumnRew;
 
-  
   @FXML
   private TableColumn<UserDto, Integer> reviewColumnStar;
 
@@ -159,7 +157,7 @@ public class UserController implements Initializable {
     columnLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
     columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
     columnInsuranceName.setCellValueFactory(new PropertyValueFactory<>("insurance"));
-    //columnMiddleStar.setCellValueFactory(new PropertyValueFactory<>("insurance"));
+    columnMiddleStar.setCellValueFactory(new PropertyValueFactory<>("middleRate"));
   }
 
   private void setRewColumnProperties() {

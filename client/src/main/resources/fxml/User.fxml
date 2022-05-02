@@ -216,6 +216,7 @@
                         <TableColumn fx:id="columnName" maxWidth="4000.0" prefWidth="75.0" text="Имя"/>
                         <TableColumn fx:id="columnInsuranceName" maxWidth="4000.0" prefWidth="75.0" text="Страховая"/>
                         <TableColumn fx:id="columnLogin" maxWidth="4000.0" prefWidth="75.0" text="Логин"/>
+                        <TableColumn fx:id="columnMiddleStar" maxWidth="4000.0" prefWidth="75.0" text="Средний отзыв"/>
                     </columns>
                     <VBox.margin>
                         <Insets left="10.0" right="5.0"/>
