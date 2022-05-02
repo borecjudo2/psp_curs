@@ -17,7 +17,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.Pane ?>
-<BorderPane prefHeight="1000.0" prefWidth="1500.0" stylesheets="@../styles/Styles.css"
+<BorderPane prefHeight="900.0" prefWidth="1300.0" stylesheets="@../styles/Styles.css"
             xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="by.bsuir.psp.client.controller.UserController">
     <left>
@@ -35,7 +35,7 @@
                 </Label>
                 <HBox prefHeight="30.0" prefWidth="265.0">
                     <children>
-                        <Label text="Айди пользователя - " textFill="#f8f7f7">
+                        <Label text="ID пользователя - " textFill="#f8f7f7">
                             <font>
                                 <Font size="15.0"/>
                             </font>
@@ -59,12 +59,17 @@
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </HBox>
-                <TextField fx:id="txName" prefHeight="30.0" prefWidth="246.0" promptText="Имя">
+                <TextField fx:id="txUserName" prefHeight="30.0" prefWidth="246.0" promptText="Имя">
                     <VBox.margin>
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </TextField>
-                <TextField fx:id="txDepartmentName" prefHeight="30.0" prefWidth="246.0" promptText="Имя отдела">
+                <TextField fx:id="txInsuranceName" prefHeight="30.0" prefWidth="246.0" promptText="Название компании">
+                    <VBox.margin>
+                        <Insets left="25.0" right="25.0"/>
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="txInsuranceInfo" prefHeight="30.0" prefWidth="246.0" promptText="Информация о компании">
                     <VBox.margin>
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
@@ -82,7 +87,7 @@
                 <HBox prefHeight="30.0" prefWidth="250.0" spacing="10.0">
                     <children>
                         <Button mnemonicParsing="false" onAction="#reset" prefHeight="30.0"
-                                prefWidth="75.0" style="-fx-background-color: white;" text="Сброс">
+                                prefWidth="75.0" style="-fx-background-color: #9e5980;" text="Сброс">
                             <effect>
                                 <DropShadow blurType="ONE_PASS_BOX" color="#1965d0"/>
                             </effect>
@@ -106,7 +111,7 @@
                     </VBox.margin>
                 </HBox>
 
-                <Label text="Добавить премиальную выплату" textFill="WHITE">
+                <Label text="Добавить отзыв" textFill="WHITE">
                     <font>
                         <Font size="20.0"/>
                     </font>
@@ -114,32 +119,37 @@
                         <Insets bottom="10.0" left="20.0" top="30.0"/>
                     </VBox.margin>
                 </Label>
-                <DatePicker fx:id="txPaymentDate" editable="false" prefHeight="30.0" promptText="Дата получения ЗП">
+                <DatePicker fx:id="txBirthDate" editable="false" prefHeight="30.0" promptText="Дата отзыва">
                     <VBox.margin>
                         <Insets left="25.0"/>
                     </VBox.margin>
                 </DatePicker>
-                <TextField fx:id="txSalary" prefHeight="30.0" prefWidth="246.0" promptText="Заработная плата">
+                <TextField fx:id="txRewName" prefHeight="30.0" prefWidth="246.0" promptText="Краткое название">
                     <VBox.margin>
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </TextField>
-                <TextField fx:id="txOverratedTime" prefHeight="30.0" prefWidth="246.0" promptText="Переработанные часы">
+                <TextField fx:id="txRew" prefHeight="30.0" prefWidth="246.0" promptText="Отзыв">
+                    <VBox.margin>
+                        <Insets left="25.0" right="25.0"/>
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="txStar" prefHeight="30.0" prefWidth="246.0" promptText="Звезды(1-5)">
                     <VBox.margin>
                         <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </TextField>
                 <HBox prefHeight="30.0" prefWidth="250.0" spacing="10.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#resetAwardFields" prefHeight="30.0"
-                                prefWidth="75.0" style="-fx-background-color: white;" text="Сброс">
+                        <Button mnemonicParsing="false" onAction="#resetRewFields" prefHeight="30.0"
+                                prefWidth="75.0" style="-fx-background-color: #9e5980;" text="Сброс">
                             <effect>
                                 <DropShadow blurType="ONE_PASS_BOX" color="#1965d0"/>
                             </effect>
                         </Button>
                         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
-                                onAction="#saveAward" prefHeight="30.0" styleClass="btnGreen"
-                                text="Сохранить и посчитать премию" textFill="WHITE">
+                                onAction="#saveRew" prefHeight="30.0" styleClass="btnGreen"
+                                text="Сохранить отзыв" textFill="WHITE">
                             <font>
                                 <Font size="15.0"/>
                             </font>
@@ -165,12 +175,13 @@
         </VBox>
     </left>
     <center>
-        <VBox alignment="TOP_RIGHT" prefHeight="571.0" prefWidth="692.0" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_RIGHT" prefHeight="571.0" prefWidth="692.0" BorderPane.alignment="CENTER"
+              style="-fx-background-color: #4e6f85">
             <children>
                 <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
                     <children>
                         <Button mnemonicParsing="false" onAction="#toExcel" prefHeight="22.0"
-                                prefWidth="70.0" styleClass="background" style="-fx-background-color: green" text=".xsl"
+                                prefWidth="70.0" styleClass="background" style="-fx-background-color: #424e61" text=".xsl"
                                 textFill="#fff9f9"
                                 textOverrun="CLIP">
                             <font>
@@ -200,10 +211,10 @@
                 </HBox>
                 <TableView onMouseClicked="#clickOnUserTable" fx:id="userTable" prefHeight="200.0"
                            tableMenuButtonVisible="true">
-                    <columns>
-                        <TableColumn fx:id="columnUserId" maxWidth="700.0" prefWidth="20.0" text="ИД"/>
+                    <columns >
+                        <TableColumn fx:id="columnUserId" maxWidth="700.0" prefWidth="20.0" text="ID"/>
                         <TableColumn fx:id="columnName" maxWidth="4000.0" prefWidth="75.0" text="Имя"/>
-                        <TableColumn fx:id="columnDepartmentName" maxWidth="4000.0" prefWidth="75.0" text="Имя отдела"/>
+                        <TableColumn fx:id="columnInsuranceName" maxWidth="4000.0" prefWidth="75.0" text="Страховая"/>
                         <TableColumn fx:id="columnLogin" maxWidth="4000.0" prefWidth="75.0" text="Логин"/>
                     </columns>
                     <VBox.margin>
@@ -217,16 +228,18 @@
                             <items>
                                 <MenuItem disable="${controller.currentUserBasic}" mnemonicParsing="false"
                                           onAction="#deleteUser" text="Удалить"/>
+                                <MenuItem disable="${controller.currentUserBasic}" mnemonicParsing="false"
+                                          onAction="#showInf" text="Показать информацию о страховой"/>
                             </items>
                         </ContextMenu>
                     </contextMenu>
                 </TableView>
-                <TableView fx:id="paymentTable" prefHeight="200.0" tableMenuButtonVisible="true">
+                <TableView onMouseClicked="#clickOnReviewTable" fx:id="reviewTable" prefHeight="200.0" tableMenuButtonVisible="true">
                     <columns>
-                        <TableColumn fx:id="paymentColumnDate" maxWidth="4000.0" prefWidth="75.0" text="Дата выплаты"/>
-                        <TableColumn fx:id="paymentColumnSalary" maxWidth="4000.0" prefWidth="75.0" text="Зарплата"/>
-                        <TableColumn fx:id="paymentColumnAward" maxWidth="4000.0" prefWidth="75.0" text="Премия"/>
-                        <TableColumn fx:id="paymentColumnOverratedTime" maxWidth="4000.0" prefWidth="75.0" text="Переработанные часы"/>
+                        <TableColumn fx:id="reviewColumnBirthDate" maxWidth="4000.0" prefWidth="75.0" text="Дата отзыва"/>
+                        <TableColumn fx:id="reviewColumnName" maxWidth="4000.0" prefWidth="75.0" text="Название"/>
+                        <TableColumn fx:id="reviewColumnRew" maxWidth="4000.0" prefWidth="75.0" text="Отзыв"/>
+                        <TableColumn fx:id="reviewColumnStar" maxWidth="4000.0" prefWidth="75.0" text="Звезды★"/>
                     </columns>
                     <VBox.margin>
                         <Insets left="10.0" right="5.0"/>
@@ -238,7 +251,7 @@
                         <ContextMenu>
                             <items>
                                 <MenuItem disable="${controller.currentUserBasic}" mnemonicParsing="false"
-                                          onAction="#deleteAward" text="Удалить"/>
+                                          onAction="#deleteRew" text="Удалить"/>
                             </items>
                         </ContextMenu>
                     </contextMenu>

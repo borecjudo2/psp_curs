@@ -1,6 +1,6 @@
-by\bsuir\psp\model\dto\DepartmentDto.class
-by\bsuir\psp\model\dto\PaymentDto.class
-by\bsuir\psp\model\dto\OverratedTimeDto.class
+by\bsuir\psp\model\dto\service\InsuranceService.class
+by\bsuir\psp\model\dto\ReviewDto.class
+by\bsuir\psp\model\dto\InsuranceDto.class
 by\bsuir\psp\model\dto\service\UserService.class
 by\bsuir\psp\model\dto\UserDto.class
 by\bsuir\psp\model\dto\UserRole.class

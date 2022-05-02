@@ -1,9 +1,8 @@
 package by.bsuir.psp.server;
 
 import by.bsuir.psp.model.dto.UserRole;
-import by.bsuir.psp.server.model.OverratedTime;
-import by.bsuir.psp.server.model.Payment;
-import by.bsuir.psp.server.model.Department;
+import by.bsuir.psp.server.model.Insurance;
+import by.bsuir.psp.server.model.Review;
 import by.bsuir.psp.server.model.User;
 import by.bsuir.psp.server.repo.UserRepository;
 import org.springframework.boot.SpringApplication;
@@ -20,12 +19,13 @@ public class Application {
 		ConfigurableApplicationContext run = SpringApplication.run(Application.class, args);
 		UserRepository userRepository = run.getBean(UserRepository.class);
 		userRepository.save(User.builder()
-				.name("Vlad")
+				.name("Kirill")
 				.role(UserRole.ADMIN)
-				.login("adm")
-				.password("adm")
-				.department(new Department(null, "MAIN"))
-				.payments(Collections.singletonList(new Payment(null, new Date(), 1000L, 300L, new OverratedTime(null, 10))))
+				.login("1")
+				.password("1")
+				.insurance(new Insurance(null, "Hilton", "some info"))
+				.reviewDto(Collections.singletonList(new Review(null, "Better then Sputnik",
+						"Chill!!!", 5, new Date())))
 				.build());
 	}
 }

@@ -12,7 +12,7 @@
 
 <AnchorPane stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.psp.client.controller.LoginController">
    <children>
-      <Rectangle fill="DODGERBLUE" height="250.0" stroke="#ffffff8b" strokeType="INSIDE" width="400.0" />
+      <Rectangle fill="rosybrown" height="250.0" stroke="#ffffff8b" strokeType="INSIDE" width="400.0" />
       <Label fx:id="lblLogin" layoutX="97.0" layoutY="46.0" text="Логин" textFill="WHITE">
          <font>
             <Font size="20.0" />

@@ -4,12 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * DESCRIPTION
- *
- * @author Vladislav_Karpeka
- * @version 1.0.0
- */
+
 public class UserDto implements Serializable {
 
   private UUID id;
@@ -22,21 +17,22 @@ public class UserDto implements Serializable {
 
   private String password;
 
-  private DepartmentDto department;
+  private InsuranceDto insurance;
 
-  private List<PaymentDto> payments;
+  private List<ReviewDto> reviewDto;
 
   public UserDto() {
   }
 
-  public UserDto(UUID id, UserRole role, String login, String name, String password, DepartmentDto department, List<PaymentDto> payments) {
+  public UserDto(UUID id, UserRole role, String login, String name, String password,
+                 InsuranceDto insurance, List<ReviewDto> reviewDto) {
     this.id = id;
     this.role = role;
     this.login = login;
     this.name = name;
     this.password = password;
-    this.department = department;
-    this.payments = payments;
+    this.insurance = insurance;
+    this.reviewDto = reviewDto;
   }
 
   public UUID getId() {
@@ -79,19 +75,24 @@ public class UserDto implements Serializable {
     this.password = password;
   }
 
-  public DepartmentDto getDepartment() {
-    return department;
+  public InsuranceDto getInsurance() {
+    return insurance;
   }
 
-  public void setDepartment(DepartmentDto department) {
-    this.department = department;
+  public void setInsurance(InsuranceDto insurance) {
+    this.insurance = insurance;
   }
 
-  public List<PaymentDto> getPayments() {
-    return payments;
+  public List<ReviewDto> getReviewDto() {
+    return reviewDto;
   }
 
-  public void setPayments(List<PaymentDto> payments) {
-    this.payments = payments;
+  public void setReviewDto(List<ReviewDto> reviewDto) {
+    this.reviewDto = reviewDto;
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 }

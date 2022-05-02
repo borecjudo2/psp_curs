@@ -2,9 +2,8 @@ package by.bsuir.psp.client.controller;
 
 import by.bsuir.psp.client.config.StageManager;
 import by.bsuir.psp.client.view.FxmlView;
-import by.bsuir.psp.model.dto.DepartmentDto;
-import by.bsuir.psp.model.dto.OverratedTimeDto;
-import by.bsuir.psp.model.dto.PaymentDto;
+import by.bsuir.psp.model.dto.InsuranceDto;
+import by.bsuir.psp.model.dto.ReviewDto;
 import by.bsuir.psp.model.dto.UserDto;
 import by.bsuir.psp.model.dto.UserRole;
 import by.bsuir.psp.model.dto.service.UserService;
@@ -53,8 +52,6 @@ import java.util.UUID;
 @Controller
 public class UserController implements Initializable {
 
-  private static final double AWARD_PERCENT = 0.1;
-
   @FXML
   private boolean currentUserBasic;
 
@@ -65,10 +62,19 @@ public class UserController implements Initializable {
   private Label userId;
 
   @FXML
-  private TextField txName;
+  private TextField txUserName;
 
   @FXML
-  private TextField txDepartmentName;
+  private TextField txRewName;
+
+  @FXML
+  private TextField txRew;
+
+  @FXML
+  private TextField txInsuranceName;
+
+  @FXML
+  private TextField txInsuranceInfo;
 
   @FXML
   private TextField txLogin;
@@ -77,13 +83,10 @@ public class UserController implements Initializable {
   private PasswordField txPassword;
 
   @FXML
-  private DatePicker txPaymentDate;
+  private DatePicker txBirthDate;
 
   @FXML
-  private TextField txSalary;
-
-  @FXML
-  private TextField txOverratedTime;
+  private TextField txStar;
 
   @FXML
   private TableColumn<UserDto, String> columnLogin;
@@ -95,28 +98,39 @@ public class UserController implements Initializable {
   private TableColumn<UserDto, UUID> columnUserId;
 
   @FXML
-  private TableColumn<UserDto, String> columnName;
+  private TableColumn<UserDto, UUID> columnName;
 
   @FXML
-  private TableColumn<UserDto, String> columnDepartmentName;
+  private TableColumn<UserDto, String> columnInsuranceName;
 
   @FXML
-  private TableView<PaymentDto> paymentTable;
+  private TableColumn<UserDto, String> columnMiddleStar;
+
 
   @FXML
-  private TableColumn<UserDto, Date> paymentColumnDate;
+  private TableView<ReviewDto> reviewTable;
 
   @FXML
-  private TableColumn<UserDto, String> paymentColumnSalary;
+  private TableColumn<UserDto, Date> reviewColumnBirthDate;
 
   @FXML
-  private TableColumn<UserDto, String> paymentColumnAward;
+  private TableColumn<UserDto, String> reviewColumnName;
 
   @FXML
-  private TableColumn<UserDto, Integer> paymentColumnOverratedTime;
+  private TableColumn<UserDto, String> reviewColumnRew;
+
+  
+  @FXML
+  private TableColumn<UserDto, Integer> reviewColumnStar;
 
   @FXML
   private Pane pane;
+
+  @FXML
+  private Label middleStar;
+
+  @FXML
+  private Label Star;
 
   @Lazy
   @Autowired
@@ -127,7 +141,7 @@ public class UserController implements Initializable {
 
   private final ObservableList<UserDto> userList = FXCollections.observableArrayList();
 
-  private final ObservableList<PaymentDto> paymentDtoObservableList = FXCollections.observableArrayList();
+  private final ObservableList<ReviewDto> ReviewDtoObservableList = FXCollections.observableArrayList();
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -135,7 +149,7 @@ public class UserController implements Initializable {
     userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     setUserColumnProperties();
-    setAwardColumnProperties();
+    setRewColumnProperties();
 
     loadUserDetails();
   }
@@ -144,28 +158,29 @@ public class UserController implements Initializable {
     columnUserId.setCellValueFactory(new PropertyValueFactory<>("id"));
     columnLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
     columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-    columnDepartmentName.setCellValueFactory(new PropertyValueFactory<>("department"));
+    columnInsuranceName.setCellValueFactory(new PropertyValueFactory<>("insurance"));
+    //columnMiddleStar.setCellValueFactory(new PropertyValueFactory<>("insurance"));
   }
 
-  private void setAwardColumnProperties() {
-    paymentColumnDate.setCellValueFactory(new PropertyValueFactory<>("receiveDate"));
-    paymentColumnSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
-    paymentColumnAward.setCellValueFactory(new PropertyValueFactory<>("award"));
-    paymentColumnOverratedTime.setCellValueFactory(new PropertyValueFactory<>("overratedTime"));
+  private void setRewColumnProperties() {
+    reviewColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+    reviewColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+    reviewColumnRew.setCellValueFactory(new PropertyValueFactory<>("rew"));
+    reviewColumnStar.setCellValueFactory(new PropertyValueFactory<>("star"));
   }
 
   private void loadUserDetails() {
     userList.clear();
     userList.addAll(userService.getAll());
     userTable.setItems(userList);
-    updateAwardTable(Collections.emptyList());
+    updateRewTable(Collections.emptyList());
   }
 
-  private void updateAwardTable(List<PaymentDto> paymentDtos) {
-    paymentDtoObservableList.clear();
-    paymentDtoObservableList.addAll(paymentDtos);
-    paymentTable.setItems(paymentDtoObservableList);
-    log.info(String.valueOf(paymentDtos));
+  private void updateRewTable(List<ReviewDto> ReviewDtos) {
+    ReviewDtoObservableList.clear();
+    ReviewDtoObservableList.addAll(ReviewDtos);
+    reviewTable.setItems(ReviewDtoObservableList);
+    log.info(String.valueOf(ReviewDtos));
   }
 
   @FXML
@@ -176,14 +191,15 @@ public class UserController implements Initializable {
   @FXML
   void reset() {
     clearFields();
-    resetAwardFields();
+    resetRewFields();
   }
 
   @FXML
-  void resetAwardFields() {
-    txSalary.setText("");
-    txPaymentDate.getEditor().setText(null);
-    txOverratedTime.setText("");
+  void resetRewFields() {
+    txRewName.setText("");
+    txRew.setText("");
+    txBirthDate.getEditor().setText(null);
+    txStar.setText("");
   }
 
   @FXML
@@ -193,13 +209,25 @@ public class UserController implements Initializable {
       boolean isAdmin = getUserRole(selectedItem).equals(UserRole.ADMIN);
       rbAdmin.setSelected(isAdmin);
       userId.setText(String.valueOf(selectedItem.getId()));
-      txName.setText(selectedItem.getName());
-      txDepartmentName.setText(selectedItem.getDepartment().getName());
+      txUserName.setText(selectedItem.getName());
+      txInsuranceName.setText(selectedItem.getInsurance().getName());
+      txInsuranceInfo.setText(selectedItem.getInsurance().getInfo());
       txLogin.setText(selectedItem.getLogin());
       txPassword.setText(selectedItem.getPassword());
 
-      updateAwardTable(selectedItem.getPayments());
-      updateDiagram(selectedItem.getPayments());
+      //GetReviewDto or getReview
+      updateRewTable(selectedItem.getReviewDto());
+      updateDiagram(selectedItem.getReviewDto());
+    }
+  }
+
+  public void clickOnReviewTable() {
+    ReviewDto selectedItem = reviewTable.getSelectionModel().getSelectedItem();
+    if (!Objects.isNull(selectedItem)) {
+      txRewName.setText(selectedItem.getName());
+      txRew.setText(selectedItem.getRew());
+      txStar.setText(String.valueOf(selectedItem.getStar()));
+
     }
   }
 
@@ -209,8 +237,8 @@ public class UserController implements Initializable {
       UserDto user = new UserDto();
       log.info("USER CREATED LOCAL");
       user.setRole(getUserRole(null));
-      user.setName(txName.getText());
-      user.setDepartment(new DepartmentDto(null, txDepartmentName.getText()));
+      user.setName(txUserName.getText());
+      user.setInsurance(new InsuranceDto(null, txInsuranceName.getText(), txInsuranceInfo.getText()));
       user.setLogin(txLogin.getText());
       user.setPassword(txPassword.getText());
       log.info("USER CREATED FULL");
@@ -221,8 +249,8 @@ public class UserController implements Initializable {
       UserDto user = userService.getById(UUID.fromString(userId.getText()));
 
       user.setRole(getUserRole(null));
-      user.setName(txName.getText());
-      user.setDepartment(new DepartmentDto(null, txDepartmentName.getText()));
+      user.setName(txUserName.getText());
+      user.setInsurance(new InsuranceDto(null, txInsuranceName.getText(), txInsuranceInfo.getText()));
       user.setLogin(txLogin.getText());
       user.setPassword(txPassword.getText());
 
@@ -250,53 +278,57 @@ public class UserController implements Initializable {
   }
 
   @FXML
-  public void saveAward() {
-    UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
-    if(!Objects.isNull(selectedItem)) {
-      Date date = Date.from(txPaymentDate.getValue().atStartOfDay()
-          .atZone(ZoneId.systemDefault())
-          .toInstant());
-      long salary = Long.parseLong(txSalary.getText());
-      int overratedTime = Integer.parseInt(txOverratedTime.getText());
-      System.out.println(overratedTime);
-      PaymentDto paymentDto = new PaymentDto(null, date, salary, getAwardBySalary(salary, overratedTime),
-          new OverratedTimeDto(null, overratedTime));
-      selectedItem.getPayments().add(paymentDto);
-      userService.save(selectedItem);
-    }
-    cleanDiagram();
-    resetAwardFields();
-    loadUserDetails();
-  }
+  private void showInf() {
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle(userTable.getSelectionModel().getSelectedItem().getName());
+    alert.setHeaderText(userTable.getSelectionModel().getSelectedItem().getInsurance().getName());
+    alert.setContentText(userTable.getSelectionModel().getSelectedItem().getInsurance().getInfo());
+    alert.showAndWait();
 
-  private Long getAwardBySalary(long salary, int overratedTime) {
-    Double award = salary * AWARD_PERCENT;
-    if (overratedTime > 0) {
-      award += overratedTime * salary * 0.01;
-    }
-    return award.longValue();
   }
 
   @FXML
-  public void deleteAward() {
-    PaymentDto paymentDto = paymentTable.getSelectionModel().getSelectedItem();
+  public void saveRew() {
+    UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
+    if(!Objects.isNull(selectedItem)) {
+      Date date = Date.from(txBirthDate.getValue().atStartOfDay()
+          .atZone(ZoneId.systemDefault())
+          .toInstant());
+      String name = txRewName.getText();
+      String rew = txRew.getText();
+      int star = Integer.parseInt(txStar.getText());
+      System.out.println(star);
+      ReviewDto ReviewDto = new ReviewDto(null, name, rew, star, date);
+      selectedItem.getReviewDto().add(ReviewDto);
+      userService.save(selectedItem);
+    }
+    cleanDiagram();
+    resetRewFields();
+    loadUserDetails();
+  }
+
+
+  @FXML
+  public void deleteRew() {
+    ReviewDto ReviewDto = reviewTable.getSelectionModel().getSelectedItem();
     UserDto user = userTable.getSelectionModel().getSelectedItem();
-    user.getPayments().remove(paymentDto);
+    user.getReviewDto().remove(ReviewDto);
 
     userService.save(user);
 
-    resetAwardFields();
+    resetRewFields();
     loadUserDetails();
   }
 
   private void clearFields() {
     rbAdmin.setSelected(false);
     userId.setText(null);
-    txName.clear();
-    txDepartmentName.clear();
+    txUserName.clear();
+    txInsuranceName.clear();
+    txInsuranceInfo.clear();
     txLogin.clear();
     txPassword.clear();
-    updateAwardTable(Collections.emptyList());
+    updateRewTable(Collections.emptyList());
   }
 
   private void saveAlert(UserDto user) {
@@ -340,24 +372,9 @@ public class UserController implements Initializable {
     showExcelAlert();
   }
 
-  private void updateDiagram(List<PaymentDto> paymentDtos) {
-    cleanDiagram();
-    CategoryAxis categoryAxis = new CategoryAxis();
-    categoryAxis.setLabel("Месяц");
+  private void updateDiagram(List<ReviewDto> ReviewDtos) {
 
-    NumberAxis numberAxis = new NumberAxis();
-    numberAxis.setLabel("Сумма");
 
-    BarChart chart = new BarChart(categoryAxis, numberAxis);
-    chart.setTitle("Месячная премия");
-
-    XYChart.Series series = new XYChart.Series();
-    series.setName("Премия");
-    paymentDtos.forEach( paymentDto ->
-        series.getData().add(new XYChart.Data<>(getMonth(paymentDto.getReceiveDate()), paymentDto.getAward())));
-
-    chart.getData().add(series);
-    pane.getChildren().add(chart);
   }
 
   private String getMonth(Date date) {

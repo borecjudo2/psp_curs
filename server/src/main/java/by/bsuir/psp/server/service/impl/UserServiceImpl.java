@@ -1,6 +1,6 @@
 package by.bsuir.psp.server.service.impl;
 
-import by.bsuir.psp.model.dto.PaymentDto;
+import by.bsuir.psp.model.dto.ReviewDto;
 import by.bsuir.psp.model.dto.UserDto;
 import by.bsuir.psp.model.dto.service.UserService;
 import by.bsuir.psp.server.mapper.UserMapper;
@@ -21,18 +21,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * DESCRIPTION
- *
- * @author Vladislav_Karpeka
- * @version 1.0.0
- */
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -124,21 +118,21 @@ public class UserServiceImpl implements UserService {
 
     Row row;
     Cell cell;
-    for (int i = 0; i < userDto.getPayments().size(); i++) {
+    for (int i = 0; i < userDto.getReviewDto().size(); i++) {
       row = sheet.createRow(i+1);
-      PaymentDto paymentDto = userDto.getPayments().get(i);
+      ReviewDto reviewDto = userDto.getReviewDto().get(i);
 
-      cell = row.createCell(0);
-      cell.setCellValue(new SimpleDateFormat("dd/MM/yyyy").format(paymentDto.getReceiveDate()));
-      cell.setCellStyle(style);
-
-      cell = row.createCell(1);
-      cell.setCellValue(paymentDto.getSalary());
-      cell.setCellStyle(style);
-
-      cell = row.createCell(2);
-      cell.setCellValue(paymentDto.getAward());
-      cell.setCellStyle(style);
+//      cell = row.createCell(0);
+//      cell.setCellValue(new SimpleDateFormat("dd/MM/yyyy").format(paymentDto.getReceiveDate()));
+//      cell.setCellStyle(style);
+//
+//      cell = row.createCell(1);
+//      cell.setCellValue(paymentDto.getSalary());
+//      cell.setCellStyle(style);
+//
+//      cell = row.createCell(2);
+//      cell.setCellValue(paymentDto.getAward());
+//      cell.setCellStyle(style);
     }
 
     File currDir = new File(".");
