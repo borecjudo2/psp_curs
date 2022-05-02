@@ -11,10 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -35,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -169,9 +167,19 @@ public class UserController implements Initializable {
 
   private void loadUserDetails() {
     userList.clear();
-    userList.addAll(userService.getAll());
+    userList.addAll(initRate(userService.getAll()));
     userTable.setItems(userList);
     updateRewTable(Collections.emptyList());
+  }
+
+  List<UserDto> initRate(List<UserDto> users) {
+    for (UserDto user : users) {
+      String rate = new BigDecimal(user.getReviewDto().stream().mapToInt(ReviewDto::getStar).sum())
+          .divide(new BigDecimal(user.getReviewDto().size()), 1, RoundingMode.HALF_DOWN).toPlainString();
+      log.info(rate);
+      user.setMiddleRate(rate);
+    }
+    return users;
   }
 
   private void updateRewTable(List<ReviewDto> ReviewDtos) {
@@ -225,13 +233,12 @@ public class UserController implements Initializable {
       txRewName.setText(selectedItem.getName());
       txRew.setText(selectedItem.getRew());
       txStar.setText(String.valueOf(selectedItem.getStar()));
-
     }
   }
 
   @FXML
   private void saveUser() {
-    if(userId.getText() == null || Objects.equals(userId.getText(), "")) {
+    if (userId.getText() == null || Objects.equals(userId.getText(), "")) {
       UserDto user = new UserDto();
       log.info("USER CREATED LOCAL");
       user.setRole(getUserRole(null));
@@ -269,9 +276,9 @@ public class UserController implements Initializable {
     alert.setContentText("Are you sure you want to delete selected?");
     ButtonType action = alert.showAndWait().orElseThrow(RuntimeException::new);
 
-		if (action == ButtonType.OK) {
-			userService.delete(userTable.getSelectionModel().getSelectedItem().getId());
-		}
+    if (action == ButtonType.OK) {
+      userService.delete(userTable.getSelectionModel().getSelectedItem().getId());
+    }
     loadUserDetails();
   }
 
@@ -282,13 +289,12 @@ public class UserController implements Initializable {
     alert.setHeaderText(userTable.getSelectionModel().getSelectedItem().getInsurance().getName());
     alert.setContentText(userTable.getSelectionModel().getSelectedItem().getInsurance().getInfo());
     alert.showAndWait();
-
   }
 
   @FXML
   public void saveRew() {
     UserDto selectedItem = userTable.getSelectionModel().getSelectedItem();
-    if(!Objects.isNull(selectedItem)) {
+    if (!Objects.isNull(selectedItem)) {
       Date date = Date.from(txBirthDate.getValue().atStartOfDay()
           .atZone(ZoneId.systemDefault())
           .toInstant());
@@ -304,7 +310,6 @@ public class UserController implements Initializable {
     resetRewFields();
     loadUserDetails();
   }
-
 
   @FXML
   public void deleteRew() {
@@ -354,7 +359,7 @@ public class UserController implements Initializable {
   }
 
   private UserRole getUserRole(UserDto userDto) {
-    if(Objects.isNull(userDto)) {
+    if (Objects.isNull(userDto)) {
       return rbAdmin.isSelected() ? UserRole.ADMIN : UserRole.BASIC;
     } else {
       return userDto.getRole();
@@ -371,7 +376,6 @@ public class UserController implements Initializable {
   }
 
   private void updateDiagram(List<ReviewDto> ReviewDtos) {
-
 
   }
 

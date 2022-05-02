@@ -20,13 +20,13 @@ public class UserDto implements Serializable {
 
   private List<ReviewDto> reviewDto;
 
-  private Integer middleRate;
+  private String middleRate;
 
   public UserDto() {
   }
 
   public UserDto(UUID id, UserRole role, String login, String name, String password, InsuranceDto insurance,
-      List<ReviewDto> reviewDto, Integer middleRate) {
+      List<ReviewDto> reviewDto, String middleRate) {
     this.id = id;
     this.role = role;
     this.login = login;
@@ -34,7 +34,7 @@ public class UserDto implements Serializable {
     this.password = password;
     this.insurance = insurance;
     this.reviewDto = reviewDto;
-    this.middleRate = getMiddleRate();
+    this.middleRate = middleRate;
   }
 
   public UUID getId() {
@@ -93,11 +93,11 @@ public class UserDto implements Serializable {
     this.reviewDto = reviewDto;
   }
 
-  public Integer getMiddleRate() {
-    return reviewDto.stream().mapToInt(ReviewDto::getStar).sum();
+  public String getMiddleRate() {
+    return middleRate;
   }
 
-  public void setMiddleRate(Integer middleRate) {
+  public void setMiddleRate(String middleRate) {
     this.middleRate = middleRate;
   }
 
